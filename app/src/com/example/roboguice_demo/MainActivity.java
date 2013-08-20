@@ -1,7 +1,5 @@
 package com.example.roboguice_demo;
 
-import com.google.inject.Inject;
-
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
@@ -12,8 +10,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 @ContentView(R.layout.activity_main)
-public class MainActivity extends RoboActivity {
+public class MainActivity extends RoboActivity{
 
 	// -------------------------------
 	// ATTRIBUTES
@@ -31,10 +31,16 @@ public class MainActivity extends RoboActivity {
 	@Inject 
 	private Computer computer;
 	
+	@Inject 
+	private ComputerSingleton computerSingleton;
+	
+	// -------------------------------
+	// LIFECYCLE
+	//-------------------------------
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		initializeViews();
 	}
 	
@@ -59,13 +65,14 @@ public class MainActivity extends RoboActivity {
 	}
 	
 	// -------------------------------
-	// INNER CLASS
+	// INNER CLASSES
 	//-------------------------------
 	
 	public class OnComputeClickListener implements OnClickListener {
 
 		@Override
 		public void onClick(View v) {
+			computerSingleton.compute();
 			int result = computer.compute();
 			textViewMain.setText( String.valueOf(result));
 		}
