@@ -36,7 +36,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		getActivity().clickOnCompute();
 		
 		//test
-		int result = getActivity().getResult();
+		int result = getActivity().getDisplayedResult();
 		assertEquals(result,42);
 	}
 	

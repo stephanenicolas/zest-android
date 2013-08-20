@@ -15,6 +15,10 @@ import android.widget.TextView;
 @ContentView(R.layout.activity_main)
 public class MainActivity extends RoboActivity {
 
+	// -------------------------------
+	// ATTRIBUTES
+	//-------------------------------
+
 	@InjectView(R.id.button_main)
 	private Button buttonMain;
 	
@@ -49,7 +53,8 @@ public class MainActivity extends RoboActivity {
 		buttonMain.callOnClick();
 	}
 	
-	public int getResult() {
+	//protected for testing
+	protected int getDisplayedResult() {
 		return Integer.parseInt((String) textViewMain.getText());
 	}
 	
