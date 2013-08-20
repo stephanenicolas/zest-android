@@ -1,5 +1,7 @@
 package com.example.roboguice_demo;
 
+import com.google.inject.Inject;
+
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
@@ -22,6 +24,9 @@ public class MainActivity extends RoboActivity {
 	@InjectView(R.id.textview_main)
 	private TextView textViewMain;
 	
+	@Inject 
+	private Computer computer;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,8 +45,12 @@ public class MainActivity extends RoboActivity {
 	}
 	
 	//protected for testing
-	protected int compute() {
-		return 42;
+	protected void clickOnCompute() {
+		buttonMain.callOnClick();
+	}
+	
+	public int getResult() {
+		return Integer.parseInt((String) textViewMain.getText());
 	}
 	
 	// -------------------------------
@@ -52,7 +61,7 @@ public class MainActivity extends RoboActivity {
 
 		@Override
 		public void onClick(View v) {
-			int result = compute();
+			int result = computer.compute();
 			textViewMain.setText( String.valueOf(result));
 		}
 	}
@@ -64,4 +73,5 @@ public class MainActivity extends RoboActivity {
 			startActivity(new Intent(MainActivity.this, Activity2.class));
 		}
 	}
+
 }
