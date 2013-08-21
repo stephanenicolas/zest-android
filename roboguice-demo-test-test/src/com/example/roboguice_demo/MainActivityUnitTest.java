@@ -31,7 +31,12 @@ public class MainActivityUnitTest extends ActivityInstrumentationTestCase2<MainA
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		
+		//for android 4.3 devices / emulator only
+		//https://code.google.com/p/dexmaker/issues/detail?can=2&start=0&num=100&q=&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary&groupby=&sort=&id=2
 		System.setProperty("dexmaker.dexcache", getInstrumentation().getTargetContext().getCacheDir().toString());
+		
+		//create mocks and inject them via RoboGuice
 		mockComputer = EasyMock.createMock(Computer.class);
 		mockComputerSingleton = EasyMock.createMock(ComputerSingleton.class);
 		
