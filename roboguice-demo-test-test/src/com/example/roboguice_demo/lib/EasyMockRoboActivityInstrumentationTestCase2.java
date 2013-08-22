@@ -5,6 +5,11 @@ import java.lang.reflect.Field;
 import org.easymock.Mock;
 
 import roboguice.RoboGuice;
+import roboguice.inject.InjectExtra;
+import roboguice.inject.InjectFragment;
+import roboguice.inject.InjectPreference;
+import roboguice.inject.InjectResource;
+import roboguice.inject.InjectView;
 import android.app.Activity;
 import android.app.Application;
 import android.test.ActivityInstrumentationTestCase2;
@@ -34,6 +39,31 @@ public class EasyMockRoboActivityInstrumentationTestCase2<T extends Activity> ex
 	}
 
 	@Override
+	public T getActivity() {
+		T activity = super.getActivity();
+		for(Field field: getClass().getDeclaredFields() ) {
+			Field activityField = null;
+			try {
+				activityField = activity.getClass().getDeclaredField( field.getName());
+			}
+			catch (NoSuchFieldException e) {
+				//nothing
+			}
+			if( activityField != null && isInjected(field) && field.getType().equals(activityField.getType())) {
+				try {
+					field.setAccessible(true);
+					activityField.setAccessible(true);
+					field.set(this, activityField.get(activity));
+				}
+				catch (Exception e) {
+					throw new RuntimeException( "Impossible to mirror fields in tests",e);
+				}
+			}
+		}
+		return activity;
+	}
+
+	@Override
 	protected void tearDown() throws Exception {
 		RoboGuice.util.reset();
 		easyMocktestModule.resetAllMocks();
@@ -43,7 +73,7 @@ public class EasyMockRoboActivityInstrumentationTestCase2<T extends Activity> ex
 	protected EasyMockTestModule getEasyMocktestModule() {
 		return easyMocktestModule;
 	}
-	
+
 	private void injectTestMocks() {
 		for(Field field : getClass().getDeclaredFields()) {
 			if( field.isAnnotationPresent(Mock.class)) {
@@ -52,14 +82,21 @@ public class EasyMockRoboActivityInstrumentationTestCase2<T extends Activity> ex
 		}
 	}
 
-	
+	private boolean isInjected(Field field) {
+		return (field.getAnnotation(InjectView.class) !=null ) //
+				|| (field.getAnnotation(InjectResource.class) != null) //
+				|| (field.getAnnotation(InjectPreference.class) != null) //
+				|| (field.getAnnotation(InjectFragment.class) != null) //
+				|| (field.getAnnotation(InjectExtra.class) != null);
+	}
+
 	// -------------------------------
 	// FACADE / DELEGATION on EasyMockTestModule
 	//-------------------------------
 	public <U> U getMockOf(Class<U> clazz) {
 		return easyMocktestModule.getMockOf(clazz);
 	}
-	
+
 	public void resetAllMocks() {
 		easyMocktestModule.resetAllMocks();
 	}
@@ -72,5 +109,5 @@ public class EasyMockRoboActivityInstrumentationTestCase2<T extends Activity> ex
 		easyMocktestModule.verifyAllMocks();
 	}
 
-	
+
 }
