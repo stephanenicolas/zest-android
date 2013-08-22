@@ -1,5 +1,7 @@
 package com.example.roboguice_demo;
 
+import static org.fest.assertions.api.ANDROID.assertThat;
+
 import org.easymock.EasyMock;
 import org.easymock.Mock;
 
@@ -55,8 +57,7 @@ public class MainActivityUnitTest extends EasyMockRoboActivityInstrumentationTes
 		buttonMain.performClick();
 		
 		//test
-		int result = Integer.parseInt(textViewMain.getText().toString());
-		assertEquals(result,TEST_COMPUTE_RESULT);
+		assertThat(textViewMain).containsText(String.valueOf(TEST_COMPUTE_RESULT));
 		verifyAllMocks();
 	}
 }

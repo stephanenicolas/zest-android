@@ -8,17 +8,19 @@ import org.easymock.Mock;
 import org.easymock.MockType;
 
 import roboguice.RoboGuice;
-import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectFragment;
-import roboguice.inject.InjectPreference;
-import roboguice.inject.InjectResource;
-import roboguice.inject.InjectView;
+import roboguice.activity.RoboActivity;
 import android.app.Activity;
 import android.app.Application;
-import android.test.ActivityInstrumentationTestCase2;
 
 
-public class EasyMockRoboActivityInstrumentationTestCase2<T extends Activity> extends ActivityInstrumentationTestCase2<T> {
+/**
+ * This class will mock all dependencies of {@link RoboActivity}.
+ * <br>
+ * It will use a custom RoboGuice module to bind the mocked dependencies to RoboGuice so that mocks are injected automatically inside class under test.
+ * It will receive the same injections as Activity under test if fields are declared in the same way as in this activity (same name, type and annotation).
+ * @author SNI
+ */
+public class EasyMockRoboActivityInstrumentationTestCase2<T extends Activity> extends RoboActivityInstrumentationTestCase2<T> {
 
 	private EasyMockTestModule easyMocktestModule;
 
@@ -39,29 +41,6 @@ public class EasyMockRoboActivityInstrumentationTestCase2<T extends Activity> ex
 		Application application = (Application) getInstrumentation().getTargetContext().getApplicationContext();
 		//we use both a usual module and our module	
 		RoboGuice.setBaseApplicationInjector(application, RoboGuice.DEFAULT_STAGE, RoboGuice.newDefaultRoboModule(application),easyMocktestModule);
-	}
-
-	@Override
-	public T getActivity() {
-		T activity = super.getActivity();
-		for(Field field: getClass().getDeclaredFields() ) {
-			Field activityField = null;
-			try {
-				activityField = activity.getClass().getDeclaredField( field.getName());
-				if( isInjected(field) && field.getType().equals(activityField.getType())) {
-					field.setAccessible(true);
-					activityField.setAccessible(true);
-					field.set(this, activityField.get(activity));
-				}
-			}
-			catch (NoSuchFieldException e) {
-				//nothing
-			}
-			catch (Exception e) {
-				throw new RuntimeException( "Impossible to mirror fields in tests",e);
-			}
-		}
-		return activity;
 	}
 
 	@Override
@@ -98,14 +77,6 @@ public class EasyMockRoboActivityInstrumentationTestCase2<T extends Activity> ex
 				}
 			}
 		}
-	}
-
-	private boolean isInjected(Field field) {
-		return (field.getAnnotation(InjectView.class) !=null ) //
-				|| (field.getAnnotation(InjectResource.class) != null) //
-				|| (field.getAnnotation(InjectPreference.class) != null) //
-				|| (field.getAnnotation(InjectFragment.class) != null) //
-				|| (field.getAnnotation(InjectExtra.class) != null);
 	}
 
 	// -------------------------------
