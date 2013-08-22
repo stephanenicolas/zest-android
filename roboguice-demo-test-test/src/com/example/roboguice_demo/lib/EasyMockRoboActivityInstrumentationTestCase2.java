@@ -1,8 +1,11 @@
 package com.example.roboguice_demo.lib;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 import org.easymock.Mock;
+import org.easymock.MockType;
 
 import roboguice.RoboGuice;
 import roboguice.inject.InjectExtra;
@@ -45,19 +48,17 @@ public class EasyMockRoboActivityInstrumentationTestCase2<T extends Activity> ex
 			Field activityField = null;
 			try {
 				activityField = activity.getClass().getDeclaredField( field.getName());
-			}
-			catch (NoSuchFieldException e) {
-				//nothing
-			}
-			if( activityField != null && isInjected(field) && field.getType().equals(activityField.getType())) {
-				try {
+				if( isInjected(field) && field.getType().equals(activityField.getType())) {
 					field.setAccessible(true);
 					activityField.setAccessible(true);
 					field.set(this, activityField.get(activity));
 				}
-				catch (Exception e) {
-					throw new RuntimeException( "Impossible to mirror fields in tests",e);
-				}
+			}
+			catch (NoSuchFieldException e) {
+				//nothing
+			}
+			catch (Exception e) {
+				throw new RuntimeException( "Impossible to mirror fields in tests",e);
 			}
 		}
 		return activity;
@@ -74,10 +75,27 @@ public class EasyMockRoboActivityInstrumentationTestCase2<T extends Activity> ex
 		return easyMocktestModule;
 	}
 
-	private void injectTestMocks() {
+	private void injectTestMocks() throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		for(Field field : getClass().getDeclaredFields()) {
 			if( field.isAnnotationPresent(Mock.class)) {
-				easyMocktestModule.addClassToMock(field.getType());
+				Annotation mockAnnotation = field.getAnnotation(Mock.class);
+				MockType mockType = (MockType) mockAnnotation.annotationType().getMethod("type").invoke(mockAnnotation);
+				Class<?> classToMock = field.getType();
+				switch( mockType ) {
+					case NICE : 
+						easyMocktestModule.addClassToNiceMock(classToMock);
+						break;
+						
+					case STRICT : 
+						easyMocktestModule.addClassToStrictMock(classToMock);
+						break;
+						
+					case DEFAULT :
+					default: 
+						easyMocktestModule.addClassToMock(classToMock);
+						break;
+
+				}
 			}
 		}
 	}

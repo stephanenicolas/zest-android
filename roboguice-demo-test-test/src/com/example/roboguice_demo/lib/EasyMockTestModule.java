@@ -24,7 +24,16 @@ public class EasyMockTestModule  implements Module {
 	public void addClassToMock(Class<?> classToMock) {
 		mapClassToMock .put( classToMock, EasyMock.createMock(classToMock));
 	}
+	
+	public void addClassToNiceMock(Class<?> classToMock) {
+		mapClassToMock .put( classToMock, EasyMock.createNiceMock(classToMock));
+	}
 
+	public void addClassToStrictMock(Class<?> classToMock) {
+		mapClassToMock .put( classToMock, EasyMock.createStrictMock(classToMock));
+	}
+
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void configure(Binder binder) {
@@ -57,4 +66,5 @@ public class EasyMockTestModule  implements Module {
 			EasyMock.verify(mock);
 		}
 	}
+
 }
