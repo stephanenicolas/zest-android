@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.zest</groupId>
+		<artifactId>zest-parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>zest-sample-app-test</artifactId>
+	<packaging>apk</packaging>
+	<name>zest-sample-app-test</name>
+
+	<properties>
+		<!-- Android Dependencies -->
+		<android.platform.version>4.2.2_r2</android.platform.version>
+		<java.version>1.6</java.version>
+		<android.sdk.version>17</android.sdk.version>
+		<android.support.version>r7</android.support.version>
+		<java.version>1.6</java.version>
+
+		<!-- Plugins -->
+		<maven-compiler-plugin.version>2.5.1</maven-compiler-plugin.version>
+		<android-maven-plugin.version>3.6.1</android-maven-plugin.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>android</groupId>
+			<artifactId>android</artifactId>
+			<version>${android.platform.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.zest</groupId>
+			<artifactId>zest-sample-app</artifactId>
+			<version>${project.version}</version>
+			<type>apk</type>
+		</dependency>
+		<dependency>
+			<groupId>org.zest</groupId>
+			<artifactId>zest-sample-app</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.zest</groupId>
+			<artifactId>zest-library</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.zest</groupId>
+			<artifactId>zest-library</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup</groupId>
+			<artifactId>fest-android</artifactId>
+			<version>1.0.6</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>android-maven-plugin</artifactId>
+				<version>${android-maven-plugin.version}</version>
+				<extensions>true</extensions>
+				<configuration>
+					<sdk>
+						<!-- platform or api level (api level 16 = platform 4.1) -->
+						<platform>${android.sdk.version}</platform>
+					</sdk>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
