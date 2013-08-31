@@ -1,6 +1,9 @@
 zest-andoid
 ===========
 
+<img src="https://raw.github.com/stephanenicolas/zest-android/master/gfx/logo.jpg" 
+width="350px" />
+
 Zest android is a very specialized library to write Android tests more easily when using RoboGuice and/or EasyMock.
 
 A zest test has two sides : 
