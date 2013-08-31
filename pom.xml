@@ -9,6 +9,7 @@
 
 	<modules>
 		<module>zest-library</module>
+		<module>zest-library-tests</module>
 		<module>samples/zest-sample-app</module>
 		<module>samples/zest-sample-app-test</module>
 	</modules>

@@ -26,7 +26,7 @@ public class MirrorInjector {
 			try {
 				underTestField = instanceUnderTest.getClass().getDeclaredField(testField.getName());
 				// TODO check they have same annotations
-				if (isInjected(testField) && isInjected(testField) && haveSameType(underTestField, testField)) {
+				if (isInjected(underTestField) && isInjected(testField) && haveSameType(underTestField, testField)) {
 					testField.setAccessible(true);
 					underTestField.setAccessible(true);
 					testField.set(instanceOfTest, underTestField.get(instanceUnderTest));
